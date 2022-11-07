@@ -1,5 +1,32 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+// ignore: depend_on_referenced_packages
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+Future login(String email, String password) async {
+  final response = await http.post(
+    Uri.parse("${dotenv.env["API_URL"]!}/user/login"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'email': email,
+      'password': password,
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    // ignore: avoid_print
+    print(jsonDecode(response.body));
+  } else {
+    throw Exception(jsonDecode(response.body));
+  }
+}
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -13,7 +40,11 @@ class _LogInState extends State<LogIn> {
   void initState() {
     super.initState();
     initialization();
+    print(dotenv.env["API_URL"]);
   }
+
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   void initialization() async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -58,14 +89,14 @@ class _LogInState extends State<LogIn> {
                       colors: [Color(0xFFB226B2), Color(0xFFFF4891)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter)),
-              child: const Center(
+              child: Center(
                 child: Text(
                   textAlign: TextAlign.end,
                   "PERLLAMODA",
-                  style: TextStyle(
-                      fontFamily: "Pacifico",
-                      fontSize: 30,
-                      color: Colors.white),
+                  style: GoogleFonts.tajawal(
+                    textStyle:
+                        const TextStyle(fontSize: 30, color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -94,6 +125,7 @@ class _LogInState extends State<LogIn> {
                   child: Column(
                     children: <Widget>[
                       TextField(
+                        controller: email,
                         decoration: InputDecoration(
                             icon: const Icon(
                               Icons.email,
@@ -108,6 +140,7 @@ class _LogInState extends State<LogIn> {
                       ),
                       TextField(
                         obscureText: true,
+                        controller: password,
                         decoration: InputDecoration(
                             icon: const Icon(
                               Icons.vpn_key,
@@ -146,7 +179,7 @@ class _LogInState extends State<LogIn> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(20),
                               splashColor: Colors.amber,
-                              onTap: () {},
+                              onTap: () => login(email.text, password.text),
                               child: const Center(
                                 child: Text(
                                   "SIGN IN",

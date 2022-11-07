@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:perllamoda/screens/login.dart';
 import 'package:perllamoda/screens/map.dart';
 import 'package:perllamoda/screens/order_details.dart';
 import 'package:perllamoda/screens/orders.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
