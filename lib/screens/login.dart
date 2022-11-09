@@ -7,48 +7,55 @@ import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-Future login(String email, String password) async {
-  final response = await http.post(
-    Uri.parse("${dotenv.env["API_URL"]!}/user/login"),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'email': email,
-      'password': password,
-    }),
-  );
-
-  if (response.statusCode == 201) {
-    // ignore: avoid_print
-    print(jsonDecode(response.body));
-  } else {
-    throw Exception(jsonDecode(response.body));
-  }
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+  final SharedPreferences prefs;
+
+  const LogIn({super.key, required this.prefs});
 
   @override
   State<LogIn> createState() => _LogInState();
 }
 
 class _LogInState extends State<LogIn> {
+  // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   @override
   void initState() {
     super.initState();
     initialization();
-    print(dotenv.env["API_URL"]);
+  }
+
+  Future login(String email, String password) async {
+    final response = await http.post(
+      Uri.parse("${dotenv.env["API_URL"]!}/user/login"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      widget.prefs.setString('token', data['token']);
+      Navigator.pushNamed(context, "/orders");
+      print(data['token']);
+    } else {
+      throw Exception(jsonDecode(response.body));
+    }
   }
 
   final email = TextEditingController();
   final password = TextEditingController();
 
   void initialization() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 50));
     FlutterNativeSplash.remove();
+    await _getToken();
   }
 
   double getSmallDiameter(BuildContext context) =>
@@ -56,6 +63,12 @@ class _LogInState extends State<LogIn> {
 
   double getBiglDiameter(BuildContext context) =>
       MediaQuery.of(context).size.width * 7 / 8;
+  Future<void> _getToken() async {
+    final String? token = (widget.prefs.getString('token'));
+    if (token != null) {
+      Navigator.pushReplacementNamed(context, "/orders");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
