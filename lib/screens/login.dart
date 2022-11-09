@@ -42,7 +42,7 @@ class _LogInState extends State<LogIn> {
     if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
       widget.prefs.setString('token', data['token']);
-      Navigator.pushNamed(context, "/orders");
+      Navigator.pushReplacementNamed(context, "/orders");
       print(data['token']);
     } else {
       throw Exception(jsonDecode(response.body));
