@@ -38,6 +38,7 @@ dependencies:
   http: ^0.13.5
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.15
+  simple_animations: ^5.0.0+2
 
 flutter_native_splash:
   color: "#582ba6"
@@ -74,6 +75,7 @@ flutter_icons:
   ios: true
   image_path: "assets/6eff9d1e37ffd0ccfefc7ad77fad9292-gradient-letter-p-alphabet.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
+
 
   # To add assets to your application, add an assets section, like this:
 

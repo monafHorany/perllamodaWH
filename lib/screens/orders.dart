@@ -1,12 +1,10 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart';
 import 'package:perllamoda/screens/order_details.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class Orders extends StatefulWidget {
   const Orders({super.key, required SharedPreferences prefs});
@@ -31,10 +29,10 @@ class _OrdersState extends State<Orders> {
     return Scaffold(
       appBar: AppBar(title: const Text("orders")),
       body: SafeArea(
-        child: FutureBuilder<Response>(
+        child: FutureBuilder(
           future: http.get(Uri.parse(
               "${dotenv.env["API_URL"]!}/order/fetchAllNewOrder")), // a previously-obtained Future<String> or null
-          builder: (BuildContext context, AsyncSnapshot<Response> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               List<dynamic> resData =
                   List<dynamic>.from(json.decode(snapshot.data!.body));

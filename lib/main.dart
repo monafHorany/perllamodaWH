@@ -25,18 +25,19 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Perllamoda',
-        routes: {
-          OrderDetails.routeName: (context) => const OrderDetails(),
-          '/orders': (context) => Orders(prefs: prefs),
-          '/map': (context) => const Map(),
-          '/login': (context) => LogIn(prefs: prefs),
-        },
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: _decideMainPage());
+      debugShowCheckedModeBanner: false,
+      title: 'Perllamoda',
+      routes: {
+        OrderDetails.routeName: (context) => const OrderDetails(),
+        '/orders': (context) => Orders(prefs: prefs),
+        '/map': (context) => const Map(),
+        '/login': (context) => LogIn(prefs: prefs),
+      },
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: _decideMainPage(),
+    );
   }
 
   _decideMainPage() {
