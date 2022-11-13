@@ -10,7 +10,7 @@ import 'package:perllamoda/screens/order_details.dart';
 import 'package:perllamoda/screens/orders.dart';
 
 Future<void> main() async {
-  await dotenv.load();
+  await dotenv.load(fileName: ".env");
   SharedPreferences.getInstance().then((prefs) {
     runApp(LandingPage(prefs: prefs));
   });
@@ -34,7 +34,7 @@ class LandingPage extends StatelessWidget {
         '/login': (context) => LogIn(prefs: prefs),
       },
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
       ),
       home: _decideMainPage(),
     );

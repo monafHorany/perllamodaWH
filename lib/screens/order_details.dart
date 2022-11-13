@@ -9,9 +9,13 @@ class OrderDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    final list = [];
+    for (var i = 0; i < args.location.length; i++) {
+      list.add(args.location[i]["location"]);
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.orderId.toString()),
+        title: Text(list.join("         ").replaceAll("/", "->")),
       ),
       body: FutureBuilder(
         future: http.get(Uri.parse(
@@ -20,7 +24,6 @@ class OrderDetails extends StatelessWidget {
           if (snapshot.hasData) {
             Map resData = jsonDecode(snapshot.data!.body);
             // final resData = jsonDecode(snapshot.data!.body);
-            print(resData);
             List<dynamic> items = List.of(resData["order_items"]);
             return ListView.builder(
               itemCount: items.length,
@@ -42,7 +45,7 @@ class OrderDetails extends StatelessWidget {
                                 fit: BoxFit.fill),
                           ),
                         ),
-                        title: Text(items[index]["id"].toString()),
+                        title: Text(items[index]["item_name"]),
                         // subtitle: Text(resData[index]["ordered_by"]),
                       ),
                     ),
@@ -66,6 +69,7 @@ class OrderDetails extends StatelessWidget {
           } else {
             return Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   SizedBox(
                     width: 60,
@@ -89,6 +93,7 @@ class OrderDetails extends StatelessWidget {
 
 class ScreenArguments {
   final int orderId;
+  final List<dynamic> location;
 
-  ScreenArguments(this.orderId);
+  ScreenArguments({required this.orderId, required this.location});
 }

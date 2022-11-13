@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -44,6 +45,7 @@ class _OrdersState extends State<Orders> {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
+                    elevation: 14,
                     key: ValueKey(index.toString()),
                     child: Column(
                       children: [
@@ -52,29 +54,60 @@ class _OrdersState extends State<Orders> {
                           children: [
                             Expanded(
                               child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    widthFactor: 1,
-                                    child: Text(
-                                        resData[index]?["user"]?["name"] ??
-                                            "N/A",
-                                        textAlign: TextAlign.center),
+                                isThreeLine: true,
+                                leading: ClipOval(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(30),
+                                    child: DecoratedBox(
+                                      decoration: const BoxDecoration(
+                                          color:
+                                              Color.fromARGB(255, 84, 73, 133)),
+                                      child: Center(
+                                        child: Text(
+                                          resData[index]?["user"]?["name"] ??
+                                              "N/A",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            overflow: TextOverflow.ellipsis,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 title: Text(resData[index]["id"]?.toString() ??
                                     "Empty"),
                                 subtitle: Text(resData[index]["ordered_by"]),
-                                trailing: const Icon(Icons.local_shipping),
+                                trailing: resData[index]["shipped"]
+                                    ? const Icon(
+                                        Icons.local_shipping,
+                                        color: Colors.green,
+                                      )
+                                    : const Icon(
+                                        Icons.local_shipping,
+                                      ),
                                 onTap: () {
                                   Navigator.pushNamed(
-                                      context, OrderDetails.routeName,
-                                      arguments: ScreenArguments(
-                                          resData[index]["id"]));
+                                          context, OrderDetails.routeName,
+                                          arguments: ScreenArguments(
+                                              orderId: resData[index]["id"],
+                                              location: resData[index]
+                                                  ["locations"]))
+                                      .then((_) => setState(() {}));
                                 },
                               ),
                             ),
+                            Expanded(
+                              child: ListBody(
+                                children: [
+                                  const Text("Total Price"),
+                                  Text(resData[index]["order_currency"])
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ],
@@ -98,6 +131,7 @@ class _OrdersState extends State<Orders> {
             } else {
               return Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     SizedBox(
                       width: 60,
