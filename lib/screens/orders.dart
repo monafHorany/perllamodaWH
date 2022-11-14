@@ -53,6 +53,7 @@ class _OrdersState extends State<Orders> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Expanded(
+                              flex: 3,
                               child: ListTile(
                                 isThreeLine: true,
                                 leading: ClipOval(
@@ -81,14 +82,17 @@ class _OrdersState extends State<Orders> {
                                 title: Text(resData[index]["id"]?.toString() ??
                                     "Empty"),
                                 subtitle: Text(resData[index]["ordered_by"]),
-                                trailing: resData[index]["shipped"]
-                                    ? const Icon(
-                                        Icons.local_shipping,
-                                        color: Colors.green,
-                                      )
-                                    : const Icon(
-                                        Icons.local_shipping,
-                                      ),
+                                trailing: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    const Text("Total Price"),
+                                    Text(
+                                        "${resData[index]["shipping_fees"] + (resData[index]["price"])}  "
+                                        "${resData[index]["order_currency"]}"),
+                                  ],
+                                ),
                                 onTap: () {
                                   Navigator.pushNamed(
                                           context, OrderDetails.routeName,
@@ -101,10 +105,17 @@ class _OrdersState extends State<Orders> {
                               ),
                             ),
                             Expanded(
+                              flex: 1,
                               child: ListBody(
                                 children: [
-                                  const Text("Total Price"),
-                                  Text(resData[index]["order_currency"])
+                                  resData[index]["shipped"]
+                                      ? const Icon(
+                                          Icons.local_shipping,
+                                          color: Colors.green,
+                                        )
+                                      : const Icon(
+                                          Icons.local_shipping,
+                                        ),
                                 ],
                               ),
                             )

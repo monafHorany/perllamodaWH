@@ -39,6 +39,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.15
   simple_animations: ^5.0.0+2
+  share_plus: ^6.3.0
 
 flutter_native_splash:
   color: "#582ba6"
